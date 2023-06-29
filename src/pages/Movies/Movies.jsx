@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams, Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Notiflix from 'notiflix';
+import { SearchForm, SearchFormInput, Btn, BtnText } from './Movies.styled';
+import { HomeList, MovieItem, Image, MovieTitle } from 'pages/Home/Home.styled';
 
 const Movies = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [foundedMovies, setFoundedMovies] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const queryFromSearchParams = searchParams.get('query');
+  const location = useLocation();
 
   useEffect(() => {
     if (queryFromSearchParams === null) {
@@ -55,8 +58,8 @@ const Movies = () => {
   return (
     <>
       <div>
-        <form onSubmit={handleSubmit}>
-          <button type="submit">
+        <SearchForm onSubmit={handleSubmit}>
+          <Btn type="submit">
             <svg
               stroke="#000"
               fill="#000"
@@ -68,10 +71,10 @@ const Movies = () => {
             >
               <path d="M448 449L301.2 300.2c20-27.9 31.9-62.2 31.9-99.2 0-93.1-74.7-168.9-166.5-168.9C74.7 32 0 107.8 0 200.9s74.7 168.9 166.5 168.9c39.8 0 76.3-14.2 105-37.9l146 148.1 30.5-31zM166.5 330.8c-70.6 0-128.1-58.3-128.1-129.9S95.9 71 166.5 71s128.1 58.3 128.1 129.9-57.4 129.9-128.1 129.9z"></path>
             </svg>
-            <div>Search</div>
-          </button>
+            <BtnText>Search</BtnText>
+          </Btn>
 
-          <input
+          <SearchFormInput
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             type="text"
@@ -80,16 +83,20 @@ const Movies = () => {
             autoFocus
             placeholder="Search movies"
           />
-        </form>
+        </SearchForm>
       </div>
       <div>
-        <ul>
+        <HomeList>
           {foundedMovies.map(({ id, poster_path, title }) => {
             return (
-              <li key={id}>
-                <Link to={`/movies/${id}`}>
+              <MovieItem key={id}>
+                <Link
+                  style={{ textDecoration: 'none', textAlign: 'center' }}
+                  to={`/movies/${id}`}
+                  state={{ from: location }}
+                >
                   <div>
-                    <img
+                    <Image
                       src={
                         poster_path
                           ? `https://image.tmdb.org/t/p/w500/${poster_path}`
@@ -98,12 +105,12 @@ const Movies = () => {
                       alt={title}
                     />
                   </div>
-                  <h2>{title}</h2>
+                  <MovieTitle>{title}</MovieTitle>
                 </Link>
-              </li>
+              </MovieItem>
             );
           })}
-        </ul>
+        </HomeList>
       </div>
     </>
   );

@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
+import { HomeList, MovieItem, Image, MovieTitle } from './Home.styled';
+
 const Home = () => {
   const [popularMovies, setPopularMovies] = useState([]);
 
@@ -27,13 +29,16 @@ const Home = () => {
   }, []);
 
   return (
-    <ul>
+    <HomeList>
       {popularMovies.map(({ id, poster_path, title }) => {
         return (
-          <li key={id}>
-            <Link to={`/movies/${id}`}>
+          <MovieItem key={id}>
+            <Link
+              style={{ textDecoration: 'none', textAlign: 'center' }}
+              to={`/movies/${id}`}
+            >
               <div>
-                <img
+                <Image
                   src={
                     poster_path
                       ? `https://image.tmdb.org/t/p/w500/${poster_path}`
@@ -42,12 +47,12 @@ const Home = () => {
                   alt={title}
                 />
               </div>
-              <h2>{title}</h2>
+              <MovieTitle>{title}</MovieTitle>
             </Link>
-          </li>
+          </MovieItem>
         );
       })}
-    </ul>
+    </HomeList>
   );
 };
 

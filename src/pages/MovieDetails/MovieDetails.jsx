@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react';
-import { useParams, Link, Outlet } from 'react-router-dom';
+import { useState, useEffect, Suspense } from 'react';
+import { useParams, Outlet } from 'react-router-dom';
 import axios from 'axios';
+import { Circles } from 'react-loader-spinner';
+import { StyledLink, MovieContainer, Image } from './MovieDetails.styled';
 
 const MovieDetails = () => {
   const [movieInfo, setMovieInfo] = useState({});
@@ -24,36 +26,32 @@ const MovieDetails = () => {
   }, [movieId]);
 
   return (
-    <div
-      style={{
-        backgroundImage: `url(${movieInfo.backdrop_path})`,
-        backgroundSize: 'cover',
-        margin: '40px',
-      }}
-    >
-      <div>
-        <img
-          src={
-            movieInfo.poster_path
-              ? `https://image.tmdb.org/t/p/w500/${movieInfo.poster_path}`
-              : 'https://st2.depositphotos.com/4323461/9818/v/450/depositphotos_98187808-stock-illustration-oops-problem-man-business-concept.jpg}'
-          }
-          alt={movieInfo.title}
-        />
-      </div>
-      <h2>Title: {movieInfo.title}</h2>
-      <p>Release: {movieInfo.release_date}</p>
-      <h2>Rating: {movieInfo.vote_average}</h2>
-      <h3>Genre: </h3>
+    <div>
+      <MovieContainer>
+        <div>
+          <Image
+            src={
+              movieInfo.poster_path
+                ? `https://image.tmdb.org/t/p/w500/${movieInfo.poster_path}`
+                : 'https://st2.depositphotos.com/4323461/9818/v/450/depositphotos_98187808-stock-illustration-oops-problem-man-business-concept.jpg}'
+            }
+            alt={movieInfo.title}
+          />
+        </div>
+        <div>
+          <h2>Title: {movieInfo.title}</h2>
+          <p>Release: {movieInfo.release_date}</p>
+          <h3>Rating: {movieInfo.vote_average}</h3>
+          {/* <h3>Genre: </h3>
       {!movieInfo.length ? (
         <p>Oooooops!</p>
       ) : (
         movieInfo.genres.map(({ name, id }) => {
           return <span id={id}>{name} </span>;
         })
-      )}
-      <p>{movieInfo.overview}</p>
-      <ul>
+      )} */}
+          <p style={{ maxWidth: '600px' }}>{movieInfo.overview}</p>
+          {/* <ul>
         {!movieInfo.length ? (
           <p>Oooooops!</p>
         ) : (
@@ -79,32 +77,31 @@ const MovieDetails = () => {
             );
           })
         )}
-      </ul>
-      <Link
-        style={{
-          margin: '20px',
-        }}
-        to={movieInfo.homepage}
+      </ul> */}
+        </div>
+      </MovieContainer>
+      <div>
+        <StyledLink to={movieInfo.homepage}>Homepage</StyledLink>
+        <StyledLink to="cast">Cast</StyledLink>
+        <StyledLink to="reviews">Reviews</StyledLink>
+      </div>
+      <Suspense
+        fallback={
+          <div>
+            <Circles
+              height="80"
+              width="80"
+              color="blue"
+              ariaLabel="circles-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+              visible={true}
+            />
+          </div>
+        }
       >
-        Homepage
-      </Link>
-      <Link
-        style={{
-          margin: '20px',
-        }}
-        to="cast"
-      >
-        Cast
-      </Link>
-      <Link
-        style={{
-          margin: '20px',
-        }}
-        to="reviews"
-      >
-        Reviews
-      </Link>
-      <Outlet />
+        <Outlet />
+      </Suspense>
     </div>
   );
 };

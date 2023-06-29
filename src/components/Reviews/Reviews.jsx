@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { ReviewsList } from './Reviews.styled';
 
 const Reviews = () => {
   const [reviews, setReviews] = useState([]);
@@ -33,7 +34,7 @@ const Reviews = () => {
   }, [movieId]);
 
   return (
-    <ul>
+    <ReviewsList>
       {!reviews.length ? (
         <p className="msg">Possibly, there are no reviews</p>
       ) : (
@@ -45,7 +46,7 @@ const Reviews = () => {
           );
         })
       )}
-    </ul>
+    </ReviewsList>
   );
 };
 

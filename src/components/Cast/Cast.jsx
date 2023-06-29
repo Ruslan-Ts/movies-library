@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { CastList, CastItem, Image } from './Cast.styled';
 
 const Cast = () => {
   const [cast, setCast] = useState({});
@@ -34,14 +35,14 @@ const Cast = () => {
   }, [movieId]);
 
   return (
-    <div>
+    <CastList>
       {!cast.length ? (
         <p>Oooops!</p>
       ) : (
         cast.map(({ cast_id, character, name, profile_path }) => {
           return (
-            <li id={cast_id}>
-              <img
+            <CastItem id={cast_id}>
+              <Image
                 src={
                   profile_path
                     ? `https://image.tmdb.org/t/p/w500/${profile_path}`
@@ -51,11 +52,11 @@ const Cast = () => {
               />
               <h2>{name}</h2>
               <p>{character}</p>
-            </li>
+            </CastItem>
           );
         })
       )}
-    </div>
+    </CastList>
   );
 };
 

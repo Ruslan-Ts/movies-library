@@ -1,14 +1,21 @@
-import { useState, useEffect, Suspense } from 'react';
-import { useParams, Outlet } from 'react-router-dom';
+import { useState, useEffect, Suspense, useRef } from 'react';
+import { useParams, Outlet, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { Circles } from 'react-loader-spinner';
 import { StyledLink, MovieContainer, Image } from './MovieDetails.styled';
+import { PiArrowCounterClockwiseBold } from 'react-icons/pi';
+import Notiflix from 'notiflix';
 
 const MovieDetails = () => {
   const [movieInfo, setMovieInfo] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
   const { movieId } = useParams();
+  const location = useLocation();
+  const pathBack = useRef(location.state?.from ?? '/');
 
   useEffect(() => {
+    setIsLoading(true);
     try {
       const fetchFoo = async movieId => {
         const { data } = await axios.get(
@@ -16,17 +23,33 @@ const MovieDetails = () => {
         );
 
         setMovieInfo(data);
-        console.log(data);
       };
       fetchFoo(movieId);
     } catch (error) {
-      console.log(error.message);
+      setIsError(true);
       setMovieInfo({});
+    } finally {
+      setIsLoading(false);
     }
   }, [movieId]);
 
   return (
     <div>
+      {isLoading && (
+        <Circles
+          height="80"
+          width="80"
+          color="blue"
+          ariaLabel="circles-loading"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+        />
+      )}
+      {isError && Notiflix.Notify.warning('Something went wrong! ')}
+      <StyledLink to={pathBack.current}>
+        <PiArrowCounterClockwiseBold /> Back
+      </StyledLink>
       <MovieContainer>
         <div>
           <Image

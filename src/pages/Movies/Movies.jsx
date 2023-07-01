@@ -4,10 +4,13 @@ import axios from 'axios';
 import Notiflix from 'notiflix';
 import { SearchForm, SearchFormInput, Btn, BtnText } from './Movies.styled';
 import { HomeList, MovieItem, Image, MovieTitle } from 'pages/Home/Home.styled';
+import { Circles } from 'react-loader-spinner';
 
 const Movies = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [foundedMovies, setFoundedMovies] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const queryFromSearchParams = searchParams.get('query');
   const location = useLocation();
@@ -16,6 +19,7 @@ const Movies = () => {
     if (queryFromSearchParams === null) {
       return;
     }
+    setIsLoading(true);
     const fetchFoo = async searchWord => {
       try {
         const {
@@ -33,7 +37,9 @@ const Movies = () => {
         }));
         setFoundedMovies(filteredMovies);
       } catch (error) {
-        console.log(error);
+        setIsError(true);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchFoo(queryFromSearchParams);
@@ -87,6 +93,18 @@ const Movies = () => {
       </div>
       <div>
         <HomeList>
+          {isLoading && (
+            <Circles
+              height="80"
+              width="80"
+              color="blue"
+              ariaLabel="circles-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+              visible={true}
+            />
+          )}
+          {isError && Notiflix.Notify.warning('Something went wrong! ')}
           {foundedMovies.map(({ id, poster_path, title }) => {
             return (
               <MovieItem key={id}>

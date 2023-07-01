@@ -19,6 +19,7 @@ export const App = () => {
           <Route path="reviews" element={<Reviews />} />
         </Route>
       </Route>
+      <Route path="*" element={<Home />} />
     </Routes>
   );
 };

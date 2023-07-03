@@ -5,7 +5,7 @@ import { StyledLink } from './Layout.styled';
 import { Circles } from 'react-loader-spinner';
 import { NavContainer, StylesSvg, PageBox } from './Layout.styled';
 
-const Leyout = () => {
+const Layout = () => {
   return (
     <PageBox>
       <StylesSvg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
@@ -156,4 +156,4 @@ const Leyout = () => {
   );
 };
 
-export default Leyout;
+export default Layout;

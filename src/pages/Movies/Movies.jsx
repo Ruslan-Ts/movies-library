@@ -3,8 +3,7 @@ import { useSearchParams, Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Notiflix from 'notiflix';
 import { SearchForm, SearchFormInput, Btn, BtnText } from './Movies.styled';
-import { HomeList, MovieItem, Image, MovieTitle } from 'pages/Home/Home.styled';
-import { Circles } from 'react-loader-spinner';
+import MovieList from 'components/MovieList/MovieList.jsx';
 
 const Movies = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -92,43 +91,17 @@ const Movies = () => {
         </SearchForm>
       </div>
       <div>
-        <HomeList>
-          {isLoading && (
-            <Circles
-              height="80"
-              width="80"
-              color="blue"
-              ariaLabel="circles-loading"
-              wrapperStyle={{}}
-              wrapperClass=""
-              visible={true}
-            />
-          )}
-          {isError && Notiflix.Notify.warning('Something went wrong! ')}
-          {foundedMovies.map(({ id, poster_path, title }) => {
-            return (
-              <MovieItem key={id}>
-                <Link
-                  style={{ textDecoration: 'none', textAlign: 'center' }}
-                  to={`/movies/${id}`}
-                  state={{ from: location }}
-                >
-                  <div>
-                    <Image
-                      src={
-                        poster_path
-                          ? `https://image.tmdb.org/t/p/w500/${poster_path}`
-                          : 'https://st2.depositphotos.com/4323461/9818/v/450/depositphotos_98187808-stock-illustration-oops-problem-man-business-concept.jpg}'
-                      }
-                      alt={title}
-                    />
-                  </div>
-                  <MovieTitle>{title}</MovieTitle>
-                </Link>
-              </MovieItem>
-            );
-          })}
-        </HomeList>
+        <Link
+          style={{ textDecoration: 'none', textAlign: 'center' }}
+          to={`/movies/${foundedMovies.id}`}
+          state={{ from: location }}
+        >
+          <MovieList
+            isLoading={isLoading}
+            isError={isError}
+            movies={foundedMovies}
+          />
+        </Link>
       </div>
     </>
   );

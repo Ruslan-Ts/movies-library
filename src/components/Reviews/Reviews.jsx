@@ -1,10 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import Notiflix from 'notiflix';
+import { Circles } from 'react-loader-spinner';
 import { ReviewsList } from './Reviews.styled';
 
 const Reviews = () => {
   const [reviews, setReviews] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
   const { movieId } = useParams();
 
   const normalizedReviews = arr => {
@@ -15,6 +19,7 @@ const Reviews = () => {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     try {
       const fetchFoo = async movieId => {
         const {
@@ -24,29 +29,44 @@ const Reviews = () => {
         );
 
         setReviews(normalizedReviews(results));
-        console.log(results);
       };
       fetchFoo(movieId);
     } catch (error) {
-      console.log(error.message);
+      setIsError(true);
       setReviews({});
+    } finally {
+      setIsLoading(false);
     }
   }, [movieId]);
 
   return (
-    <ReviewsList>
-      {!reviews.length ? (
-        <p className="msg">Possibly, there are no reviews</p>
-      ) : (
-        reviews.map(({ id, content }) => {
-          return (
-            <li key={id}>
-              <p>{content}</p>
-            </li>
-          );
-        })
+    <>
+      {isLoading && (
+        <Circles
+          height="80"
+          width="80"
+          color="blue"
+          ariaLabel="circles-loading"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+        />
       )}
-    </ReviewsList>
+      {isError && Notiflix.Notify.warning('Something went wrong! ')}
+      <ReviewsList>
+        {!reviews.length ? (
+          <p className="msg">Possibly, there are no reviews</p>
+        ) : (
+          reviews.map(({ id, content }) => {
+            return (
+              <li key={id}>
+                <p>{content}</p>
+              </li>
+            );
+          })
+        )}
+      </ReviewsList>
+    </>
   );
 };
 

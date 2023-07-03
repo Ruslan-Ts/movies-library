@@ -1,10 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import Notiflix from 'notiflix';
+import { Circles } from 'react-loader-spinner';
 import { CastList, CastItem, Image } from './Cast.styled';
 
 const Cast = () => {
   const [cast, setCast] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
   const { movieId } = useParams();
   const normalizedCast = arr => {
     return arr.map(({ cast_id, character, name, profile_path }) => ({
@@ -16,6 +20,7 @@ const Cast = () => {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     try {
       const fetchFoo = async movieId => {
         const {
@@ -25,38 +30,53 @@ const Cast = () => {
         );
 
         setCast(normalizedCast(cast));
-        console.log(cast);
       };
       fetchFoo(movieId);
     } catch (error) {
-      console.log(error.message);
+      setIsError(true);
       setCast({});
+    } finally {
+      setIsLoading(false);
     }
   }, [movieId]);
 
   return (
-    <CastList>
-      {!cast.length ? (
-        <p>Oooops!</p>
-      ) : (
-        cast.map(({ cast_id, character, name, profile_path }) => {
-          return (
-            <CastItem id={cast_id}>
-              <Image
-                src={
-                  profile_path
-                    ? `https://image.tmdb.org/t/p/w500/${profile_path}`
-                    : 'https://st2.depositphotos.com/4323461/9818/v/450/depositphotos_98187808-stock-illustration-oops-problem-man-business-concept.jpg}'
-                }
-                alt={name}
-              />
-              <h2>{name}</h2>
-              <p>{character}</p>
-            </CastItem>
-          );
-        })
+    <>
+      {isLoading && (
+        <Circles
+          height="80"
+          width="80"
+          color="blue"
+          ariaLabel="circles-loading"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+        />
       )}
-    </CastList>
+      {isError && Notiflix.Notify.warning('Something went wrong! ')}
+      <CastList>
+        {!cast.length ? (
+          <p>Oooops!</p>
+        ) : (
+          cast.map(({ cast_id, character, name, profile_path }) => {
+            return (
+              <CastItem id={cast_id}>
+                <Image
+                  src={
+                    profile_path
+                      ? `https://image.tmdb.org/t/p/w500/${profile_path}`
+                      : 'https://st2.depositphotos.com/4323461/9818/v/450/depositphotos_98187808-stock-illustration-oops-problem-man-business-concept.jpg}'
+                  }
+                  alt={name}
+                />
+                <h2>{name}</h2>
+                <p>{character}</p>
+              </CastItem>
+            );
+          })
+        )}
+      </CastList>
+    </>
   );
 };
 

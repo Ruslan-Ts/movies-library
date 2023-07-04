@@ -21,13 +21,13 @@ export const MovieItem = styled.li`
 
 export const Image = styled.img`
   width: 100%;
-  height: 480px;
+  height: 540px;
   object-fit: cover;
   background-size: cover;
   transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
   &:hover {
     transform: scale(1.03);
-    cursor: zoom-in;
+    cursor: pointer;
   }
 `;
 

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams, Link, useLocation } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import Notiflix from 'notiflix';
+import Loader from 'components/Loader/Loader';
 import { SearchForm, SearchFormInput, Btn, BtnText } from './Movies.styled';
 import MovieList from 'components/MovieList/MovieList.jsx';
 
@@ -12,7 +13,6 @@ const Movies = () => {
   const [isError, setIsError] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const queryFromSearchParams = searchParams.get('query');
-  const location = useLocation();
 
   useEffect(() => {
     if (queryFromSearchParams === null) {
@@ -44,19 +44,17 @@ const Movies = () => {
     fetchFoo(queryFromSearchParams);
   }, [queryFromSearchParams, searchParams]);
 
+  const handleChange = e => {
+    setSearchQuery(e.target.value.toLowerCase().trim());
+  };
+
   const handleSubmit = e => {
     e.preventDefault();
 
-    let value = e.target.elements.search.value;
-
-    setSearchQuery(value.toLowerCase().trim());
-    setSearchParams({ query: value.toLowerCase().trim() });
-
-    if (searchQuery.trim() === '') {
-      Notiflix.Notify.warning('Type something');
-      value = '';
-      return;
+    if (!searchQuery) {
+      return Notiflix.Notify.warning('Type something');
     }
+    setSearchParams({ query: searchQuery });
     setSearchQuery('');
   };
 
@@ -81,7 +79,7 @@ const Movies = () => {
 
           <SearchFormInput
             value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
+            onChange={handleChange}
             type="text"
             name="search"
             autoComplete="off"
@@ -91,17 +89,9 @@ const Movies = () => {
         </SearchForm>
       </div>
       <div>
-        <Link
-          style={{ textDecoration: 'none', textAlign: 'center' }}
-          to={`/movies/${foundedMovies.id}`}
-          state={{ from: location }}
-        >
-          <MovieList
-            isLoading={isLoading}
-            isError={isError}
-            movies={foundedMovies}
-          />
-        </Link>
+        {isLoading && <Loader />}
+        {isError && <p>Oops... Something went wrong...</p>}
+        {foundedMovies.length > 0 && <MovieList movies={foundedMovies} />}
       </div>
     </>
   );

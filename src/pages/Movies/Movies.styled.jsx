@@ -8,7 +8,8 @@ export const SearchForm = styled.form`
   background-color: #fff;
   border-radius: 3px;
   overflow: hidden;
-  margin: 40px;
+  margin: 0 40px;
+  margin-bottom: 40px;
 `;
 
 export const Btn = styled.button`

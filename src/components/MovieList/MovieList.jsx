@@ -1,30 +1,18 @@
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import { Circles } from 'react-loader-spinner';
-import Notiflix from 'notiflix';
+import { Link, useLocation } from 'react-router-dom';
 import { List, MovieItem, Image, MovieTitle } from './MovieList.styled';
 
-const MovieList = ({ isLoading, isError, movies }) => {
+const MovieList = ({ movies }) => {
+  const location = useLocation();
   return (
     <List>
-      {isLoading && (
-        <Circles
-          height="80"
-          width="80"
-          color="blue"
-          ariaLabel="circles-loading"
-          wrapperStyle={{}}
-          wrapperClass=""
-          visible={true}
-        />
-      )}
-      {isError && Notiflix.Notify.warning('Something went wrong! ')}
-      {movies.map(({ id, poster_path, title }) => {
+      {movies.map(({ id, poster_path, title, name, original_title }) => {
         return (
           <MovieItem key={id}>
             <Link
               style={{ textDecoration: 'none', textAlign: 'center' }}
               to={`/movies/${id}`}
+              state={{ from: location }}
             >
               <div>
                 <Image
@@ -36,7 +24,7 @@ const MovieList = ({ isLoading, isError, movies }) => {
                   alt={title}
                 />
               </div>
-              <MovieTitle>{title}</MovieTitle>
+              <MovieTitle>{title || name || original_title}</MovieTitle>
             </Link>
           </MovieItem>
         );
@@ -46,9 +34,15 @@ const MovieList = ({ isLoading, isError, movies }) => {
 };
 
 MovieList.propTypes = {
-  movies: PropTypes.object.isRequired,
-  isLoading: PropTypes.bool.isRequired,
-  isError: PropTypes.bool.isRequired,
+  movies: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      poster_path: PropTypes.string,
+      title: PropTypes.string,
+      name: PropTypes.string,
+      original_title: PropTypes.string,
+    }).isRequired
+  ),
 };
 
 export default MovieList;

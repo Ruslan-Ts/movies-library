@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import Notiflix from 'notiflix';
-import { Circles } from 'react-loader-spinner';
+import Loader from 'components/Loader/Loader';
 import { ReviewsList } from './Reviews.styled';
 
 const Reviews = () => {
@@ -41,22 +41,10 @@ const Reviews = () => {
 
   return (
     <>
-      {isLoading && (
-        <Circles
-          height="80"
-          width="80"
-          color="blue"
-          ariaLabel="circles-loading"
-          wrapperStyle={{}}
-          wrapperClass=""
-          visible={true}
-        />
-      )}
+      {isLoading && <Loader />}
       {isError && Notiflix.Notify.warning('Something went wrong! ')}
       <ReviewsList>
-        {!reviews.length ? (
-          <p className="msg">Possibly, there are no reviews</p>
-        ) : (
+        {reviews.length > 0 ? (
           reviews.map(({ id, content }) => {
             return (
               <li key={id}>
@@ -64,6 +52,8 @@ const Reviews = () => {
               </li>
             );
           })
+        ) : (
+          <p className="msg">Possibly, there are no reviews</p>
         )}
       </ReviewsList>
     </>

@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 export const NavContainer = styled.nav`
   display: flex;
   gap: 30px;
-  margin: 40px;
+  padding: 40px;
 `;
 
 export const StyledLink = styled(NavLink)`
@@ -32,18 +32,10 @@ export const StyledLink = styled(NavLink)`
   }
 `;
 
-export const StylesSvg = styled.svg`
-  grid-area: main;
-  background-size: contain;
-  height: 4200px;
-  width: 100%;
-  position: absolute;
-  z-index: -50;
-`;
-
 export const PageBox = styled.div`
   min-height: 100vh;
-  display: grid;
+
+  background-color: #e0eafb;
 `;
 
 export const Header = styled.header`

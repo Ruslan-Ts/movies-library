@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import Loader from 'components/Loader/Loader';
 import MovieList from 'components/MovieList/MovieList';
 
 const Home = () => {
@@ -33,11 +34,9 @@ const Home = () => {
 
   return (
     <>
-      <MovieList
-        isLoading={isLoading}
-        isError={isError}
-        movies={popularMovies}
-      />
+      {isLoading && <Loader />}
+      {isError && <p>Oops... Something went wrong...</p>}
+      {popularMovies.length > 0 && <MovieList movies={popularMovies} />}
     </>
   );
 };

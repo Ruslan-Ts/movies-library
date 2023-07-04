@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import Notiflix from 'notiflix';
-import { Circles } from 'react-loader-spinner';
+import Loader from 'components/Loader/Loader';
 import { CastList, CastItem, Image } from './Cast.styled';
 
 const Cast = () => {
-  const [cast, setCast] = useState({});
+  const [cast, setCast] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const { movieId } = useParams();
@@ -42,25 +42,13 @@ const Cast = () => {
 
   return (
     <>
-      {isLoading && (
-        <Circles
-          height="80"
-          width="80"
-          color="blue"
-          ariaLabel="circles-loading"
-          wrapperStyle={{}}
-          wrapperClass=""
-          visible={true}
-        />
-      )}
+      {isLoading && <Loader />}
       {isError && Notiflix.Notify.warning('Something went wrong! ')}
       <CastList>
-        {!cast.length ? (
-          <p>Oooops!</p>
-        ) : (
+        {cast.length > 0 ? (
           cast.map(({ cast_id, character, name, profile_path }) => {
             return (
-              <CastItem id={cast_id}>
+              <CastItem key={cast_id}>
                 <Image
                   src={
                     profile_path
@@ -74,6 +62,8 @@ const Cast = () => {
               </CastItem>
             );
           })
+        ) : (
+          <p>Oooops!</p>
         )}
       </CastList>
     </>

@@ -1,7 +1,7 @@
 import { useState, useEffect, Suspense, useRef } from 'react';
 import { useParams, Outlet, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import { Circles } from 'react-loader-spinner';
+import Loader from 'components/Loader/Loader';
 import { StyledLink, MovieContainer, Image } from './MovieDetails.styled';
 import { PiArrowCounterClockwiseBold } from 'react-icons/pi';
 import Notiflix from 'notiflix';
@@ -35,17 +35,7 @@ const MovieDetails = () => {
 
   return (
     <div>
-      {isLoading && (
-        <Circles
-          height="80"
-          width="80"
-          color="blue"
-          ariaLabel="circles-loading"
-          wrapperStyle={{}}
-          wrapperClass=""
-          visible={true}
-        />
-      )}
+      {isLoading && <Loader />}
       {isError && Notiflix.Notify.warning('Something went wrong! ')}
       <StyledLink to={pathBack.current}>
         <PiArrowCounterClockwiseBold /> Back
@@ -103,26 +93,12 @@ const MovieDetails = () => {
           </ul>
         </div>
       </MovieContainer>
-      <div>
+      <div style={{ paddingBottom: 40 }}>
         <StyledLink to={movieInfo.homepage}>Movie Homepage</StyledLink>
         <StyledLink to="cast">Cast</StyledLink>
         <StyledLink to="reviews">Reviews</StyledLink>
       </div>
-      <Suspense
-        fallback={
-          <div>
-            <Circles
-              height="80"
-              width="80"
-              color="blue"
-              ariaLabel="circles-loading"
-              wrapperStyle={{}}
-              wrapperClass=""
-              visible={true}
-            />
-          </div>
-        }
-      >
+      <Suspense fallback={<Loader />}>
         <Outlet />
       </Suspense>
     </div>

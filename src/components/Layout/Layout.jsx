@@ -7,17 +7,20 @@ import { NavContainer, PageBox } from './Layout.styled';
 
 const Layout = () => {
   return (
-    <PageBox>
-      <header>
-        <NavContainer>
-          <StyledLink to="/">Home</StyledLink>
-          <StyledLink to="/movies">Movies</StyledLink>
-        </NavContainer>
-      </header>
-      <Suspense fallback={<Loader />}>
-        <Outlet />
-      </Suspense>
-    </PageBox>
+    <body>
+      <PageBox>
+        <header>
+          <NavContainer>
+            <StyledLink to="/">Home</StyledLink>
+            <StyledLink to="/movies">Movies</StyledLink>
+          </NavContainer>
+        </header>
+
+        <Suspense fallback={<Loader />}>
+          <Outlet />
+        </Suspense>
+      </PageBox>
+    </body>
   );
 };
 
